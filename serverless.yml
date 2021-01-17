@@ -1,0 +1,95 @@
+service: serverless-aws-template
+
+useDotenv: true
+frameworkVersion: '2'
+unresolvedVariablesNotificationMode: error
+
+plugins:
+  - serverless-plugin-scripts
+
+provider:
+  name: aws
+  region: ap-southeast-2
+  runtime: nodejs12.x
+
+  apiGateway:
+    shouldStartNameWithService: true
+  lambdaHashingVersion: 20201221
+
+  logRetentionInDays: 14
+  deploymentBucket:
+    blockPublicAccess: true # Prevents public access via ACLs or bucket policies.
+    serverSideEncryption: AES256
+    tags: # Tags that will be added to each of the deployment resources
+      ProvisionedBy: ${self:custom.commonValues.provisionedBy}
+      Project: ${self:custom.commonValues.project}
+  stackTags: # Optional CF stack tags
+    ProvisionedBy: ${self:custom.commonValues.provisionedBy}
+    Project: ${self:custom.commonValues.project}
+  tags: # service wide tags
+    ProvisionedBy: ${self:custom.commonValues.provisionedBy}
+    Project: ${self:custom.commonValues.project}
+    Owner: Ackama
+
+  stage: staging
+
+  # These environment vars are installed into **all** functions in the service
+  environment:
+    SLACK_WEBHOOK_URL: ${env:SLACK_WEBHOOK_URL}
+    SLACK_CHANNEL: ${env:SLACK_CHANNEL}
+
+custom:
+  commonValues:
+    provisionedBy: Serverless
+    project: serverless-aws-template
+  outDir: ${file(./tsconfig.build.json):compilerOptions.outDir}
+  prepareForPacking: &prepareForPacking |
+    npm run --silent build
+  scripts:
+    hooks:
+      'before:package:createDeploymentArtifacts': *prepareForPacking
+      'before:deploy:function:packageFunction': *prepareForPacking
+
+package:
+  include:
+    - ${self:custom.outDir}/**/*
+    - package.json
+  exclude:
+    - '**/*'
+    - '!node_modules/**'
+    - '**/*.d.ts'
+    - '**/*.md'
+
+functions:
+  api-lambda:
+    handler: ${self:custom.outDir}/api-lambda/index.handler
+    tags:
+      Purpose: An example of a lambda thats invoked by URL via API Gateway
+    events:
+      - http:
+          path: /send
+          method: post
+  cloudwatch-lambda:
+    handler: ${self:custom.outDir}/cloudwatch-lambda/index.handler
+    tags:
+      Purpose: An example of a lambda thats invoked by CloudWatch log events
+    events:
+      - cloudwatchLog:
+          logGroup: '/aws/lambda/${self:service}-${opt:stage, self:provider.stage}-scheduled-lambda'
+          filter: '"source: ''aws.events''"'
+  scheduled-lambda:
+    handler: ${self:custom.outDir}/scheduled-lambda/index.handler
+    tags:
+      Purpose: An example of a lambda thats invoked by a cron schedule
+    events:
+      - schedule:
+          # run every day at 17:00 UTC (04:00 -> 06:00 in NZ)
+          rate: cron(0 17 * * ? *)
+  sns-lambda:
+    handler: ${self:custom.outDir}/sns-lambda/index.handler
+    tags:
+      Purpose: An example of a lambda thats invoked by some SNS topics
+    events:
+      # https://serverless.com/framework/docs/providers/aws/events/sns/
+      # to use a pre-existing SNS, provide an arn as the events name, or via the `arn` property
+      - sns: my-sns-topic
