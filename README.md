@@ -22,8 +22,8 @@ projects if you wish.
 To use this template, clone it locally and then remove the `.git` folder:
 
 ```
-git clone --depth=1 git://ackama/serverless-aws-template project-dir
-cd project-dir # change into the freshly cloned repos directory
+git clone --depth=1 git@github.com:ackama/serverless-aws-template.git my-project-dir
+cd my-project-dir # change into the freshly cloned repos directory
 rm -rf .git    # remove the existing git repo
 git init       # initalise a new git repo
 ```
