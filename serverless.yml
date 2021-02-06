@@ -36,7 +36,6 @@ provider:
   # These environment vars are installed into **all** functions in the service
   environment:
     SLACK_WEBHOOK_URL: ${env:SLACK_WEBHOOK_URL}
-    SLACK_CHANNEL: ${env:SLACK_CHANNEL}
 
 custom:
   commonValues:

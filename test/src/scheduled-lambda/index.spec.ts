@@ -39,16 +39,13 @@ const buildScheduledEvent = (): ScheduledEvent => ({
 
 describe('handler', () => {
   describe('when there is an event', () => {
-    it('sends a notification to the channel set by SLACK_CHANNEL', async () => {
-      process.env.SLACK_CHANNEL = '#my-channel';
-
+    it('sends a message to Slack', async () => {
       const event = buildScheduledEvent();
 
       await handler(event, fakeContext, console.log);
 
       // eslint-disable-next-line @typescript-eslint/unbound-method
       expect(mockNotifier.prototype.send).toHaveBeenCalledWith({
-        channel: '#my-channel',
         text: expect.any(String) as string
       });
     });
@@ -59,10 +56,9 @@ describe('handler', () => {
 
     beforeEach(() => {
       mockNotifier.prototype.send.mockRejectedValue(error);
-      process.env.SLACK_CHANNEL = '#my-channel';
     });
 
-    it('sends the error to the channel set by SLACK_CHANNEL', async () => {
+    it('sends the error to Slack', async () => {
       jest.spyOn(console, 'error').mockImplementation(() => null);
 
       const event = buildScheduledEvent();
@@ -70,10 +66,7 @@ describe('handler', () => {
       await handler(event, fakeContext, console.log);
 
       // eslint-disable-next-line @typescript-eslint/unbound-method
-      expect(mockNotifier.prototype.sendError).toHaveBeenCalledWith(
-        error,
-        '#my-channel'
-      );
+      expect(mockNotifier.prototype.sendError).toHaveBeenCalledWith(error);
     });
   });
 });

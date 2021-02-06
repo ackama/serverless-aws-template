@@ -7,14 +7,6 @@ import { promisify } from 'util';
 import zlib from 'zlib';
 import { Notifier } from '../utils';
 
-declare global {
-  namespace NodeJS {
-    interface ProcessEnv {
-      SLACK_CHANNEL: string;
-    }
-  }
-}
-
 const gunzip = promisify(zlib.gunzip);
 
 const decodeCloudWatchEvent = async (
@@ -42,10 +34,7 @@ interface LogEvent {
 }
 
 const handleLog = async (event: LogEvent, notifier: Notifier) => {
-  await notifier.send({
-    channel: process.env.SLACK_CHANNEL,
-    text: `hello ${event.account}!`
-  });
+  await notifier.send({ text: `hello ${event.account}!` });
 };
 
 export const handler: CloudWatchLogsHandler = async event => {
@@ -63,6 +52,6 @@ export const handler: CloudWatchLogsHandler = async event => {
   } catch (err: unknown) {
     console.error(err);
 
-    await notifier.sendError(err as Error, process.env.SLACK_CHANNEL);
+    await notifier.sendError(err as Error);
   }
 };

@@ -49,16 +49,13 @@ const buildSNSEvent = (messages: Array<Partial<SNSMessage>>): SNSEvent => ({
 
 describe('handler', () => {
   describe('when there are events', () => {
-    it('sends to the channel set by SLACK_CHANNEL', async () => {
-      process.env.SLACK_CHANNEL = '#my-channel';
-
+    it('sends a message to Slack', async () => {
       const event = buildSNSEvent([{ Message: 'hello world' }]);
 
       await handler(event, fakeContext, console.log);
 
       // eslint-disable-next-line @typescript-eslint/unbound-method
       expect(mockNotifier.prototype.send).toHaveBeenCalledWith({
-        channel: '#my-channel',
         text: expect.any(String) as string
       });
     });
@@ -72,7 +69,6 @@ describe('handler', () => {
       messages.forEach(message => {
         // eslint-disable-next-line @typescript-eslint/unbound-method
         expect(mockNotifier.prototype.send).toHaveBeenCalledWith({
-          channel: expect.any(String) as string,
           text: expect.stringContaining(message) as string
         });
       });
@@ -95,10 +91,9 @@ describe('handler', () => {
 
     beforeEach(() => {
       mockNotifier.prototype.send.mockRejectedValue(error);
-      process.env.SLACK_CHANNEL = '#my-channel';
     });
 
-    it('sends the error to the channel set by SLACK_CHANNEL', async () => {
+    it('sends the error to Slack', async () => {
       jest.spyOn(console, 'error').mockImplementation(() => null);
 
       const event = buildSNSEvent([{ Message: 'hello world' }]);
@@ -106,10 +101,7 @@ describe('handler', () => {
       await handler(event, fakeContext, console.log);
 
       // eslint-disable-next-line @typescript-eslint/unbound-method
-      expect(mockNotifier.prototype.sendError).toHaveBeenCalledWith(
-        error,
-        '#my-channel'
-      );
+      expect(mockNotifier.prototype.sendError).toHaveBeenCalledWith(error);
     });
   });
 });

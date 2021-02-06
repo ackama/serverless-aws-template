@@ -33,9 +33,7 @@ const buildApiGatewayEvent = (message: string): APIGatewayProxyEvent => {
 describe('handler', () => {
   describe('when the body has a message property', () => {
     describe('when the message property is not empty', () => {
-      it('sends the message to the channel set by SLACK_CHANNEL', async () => {
-        process.env.SLACK_CHANNEL = '#my-channel';
-
+      it('sends a message to Slack', async () => {
         const message = 'hello world!';
         const event = buildApiGatewayEvent(message);
 
@@ -43,7 +41,6 @@ describe('handler', () => {
 
         // eslint-disable-next-line @typescript-eslint/unbound-method
         expect(mockNotifier.prototype.send).toHaveBeenCalledWith({
-          channel: '#my-channel',
           text: message
         });
       });
@@ -91,10 +88,9 @@ describe('handler', () => {
 
     beforeEach(() => {
       mockNotifier.prototype.send.mockRejectedValue(error);
-      process.env.SLACK_CHANNEL = '#my-channel';
     });
 
-    it('sends the error to the channel set by SLACK_CHANNEL', async () => {
+    it('sends the error to Slack', async () => {
       jest.spyOn(console, 'error').mockImplementation(() => null);
 
       const event = buildApiGatewayEvent('my message');
@@ -102,10 +98,7 @@ describe('handler', () => {
       await handler(event, fakeContext, console.log);
 
       // eslint-disable-next-line @typescript-eslint/unbound-method
-      expect(mockNotifier.prototype.sendError).toHaveBeenCalledWith(
-        error,
-        '#my-channel'
-      );
+      expect(mockNotifier.prototype.sendError).toHaveBeenCalledWith(error);
     });
 
     it('returns a 500', async () => {

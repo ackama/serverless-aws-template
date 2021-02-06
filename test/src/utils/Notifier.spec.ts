@@ -62,11 +62,10 @@ describe('Notifier', () => {
     it('sends a message to slack with the stack trace', async () => {
       const notifier = new Notifier('https://example.com/webhook');
 
-      await notifier.sendError(new Error('oh noes!'), '#my-channel');
+      await notifier.sendError(new Error('oh noes!'));
 
       // eslint-disable-next-line @typescript-eslint/unbound-method
       expect(fakeIncomingWebhook.prototype.send).toHaveBeenCalledWith({
-        channel: expect.stringMatching(/^#/u) as string,
         text: expect.stringContaining('oh noes!') as string
       });
     });
@@ -78,9 +77,9 @@ describe('Notifier', () => {
 
       const notifier = new Notifier('https://example.com/webhook');
 
-      await expect(
-        notifier.sendError(new Error('oh noes!'), '#my-channel')
-      ).resolves.toBe(false);
+      await expect(notifier.sendError(new Error('oh noes!'))).resolves.toBe(
+        false
+      );
     });
 
     describe("when the error doesn't have a stack", () => {
@@ -90,15 +89,29 @@ describe('Notifier', () => {
 
         delete error.stack;
 
-        await notifier.sendError(error, '#my-channel');
+        await notifier.sendError(error);
 
         // eslint-disable-next-line @typescript-eslint/unbound-method
         expect(fakeIncomingWebhook.prototype.send).toHaveBeenCalledWith({
-          channel: expect.stringMatching(/^#/u) as string,
           text: expect.stringContaining(
             "oh noes, we don't have a stack trace!"
           ) as string
         });
+      });
+    });
+
+    describe('when a channel is provided', () => {
+      it('sends the message to that channel', async () => {
+        const notifier = new Notifier('https://example.com/webhook');
+
+        await notifier.sendError(new Error('oh noes!'), '#my-channel');
+
+        // eslint-disable-next-line @typescript-eslint/unbound-method
+        expect(fakeIncomingWebhook.prototype.send).toHaveBeenCalledWith(
+          expect.objectContaining({
+            channel: '#my-channel'
+          })
+        );
       });
     });
   });
