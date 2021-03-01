@@ -21,17 +21,17 @@ provider:
     blockPublicAccess: true # Prevents public access via ACLs or bucket policies.
     serverSideEncryption: AES256
     tags: # Tags that will be added to each of the deployment resources
-      ProvisionedBy: ${self:custom.commonValues.provisionedBy}
-      Project: ${self:custom.commonValues.project}
+      ProvisionedBy: ${self:custom.commonTags.provisionedBy}
+      Project: ${self:custom.commonTags.project}
   stackTags: # Optional CF stack tags
-    ProvisionedBy: ${self:custom.commonValues.provisionedBy}
-    Project: ${self:custom.commonValues.project}
+    ProvisionedBy: ${self:custom.commonTags.provisionedBy}
+    Project: ${self:custom.commonTags.project}
   tags: # service wide tags
-    ProvisionedBy: ${self:custom.commonValues.provisionedBy}
-    Project: ${self:custom.commonValues.project}
+    ProvisionedBy: ${self:custom.commonTags.provisionedBy}
+    Project: ${self:custom.commonTags.project}
     Owner: Ackama
 
-  stage: staging
+  stage: ${opt:stage, 'staging'}
 
   # These environment vars are installed into **all** functions in the service
   environment:
@@ -39,7 +39,10 @@ provider:
     SLACK_CHANNEL: ${env:SLACK_CHANNEL}
 
 custom:
-  commonValues:
+  resources:
+    prefix: ${self:service}-${self:provider.stage}
+    #uploadsBucket: ${self:custom.resources.prefix}-uploads
+  commonTags:
     provisionedBy: Serverless
     project: serverless-aws-template
   outDir: ${file(./tsconfig.build.json):compilerOptions.outDir}
@@ -93,3 +96,6 @@ functions:
       # https://serverless.com/framework/docs/providers/aws/events/sns/
       # to use a pre-existing SNS, provide an arn as the events name, or via the `arn` property
       - sns: my-sns-topic
+
+resources:
+  Resources: ${file(./resources.yml)}
