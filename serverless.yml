@@ -10,7 +10,7 @@ plugins:
 provider:
   name: aws
   region: ap-southeast-2
-  runtime: nodejs12.x
+  runtime: nodejs14.x
 
   apiGateway:
     shouldStartNameWithService: true
