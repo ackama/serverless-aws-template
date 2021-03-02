@@ -65,6 +65,9 @@ all possible values supported by this file
 You can find a general introduction to AWS on Serverless
 [here](https://www.serverless.com/framework/docs/providers/aws/guide/intro/).
 
+Additional infrastructure is defined in `resources.yml`, which Serverless passes
+to CloudFormation to include as part of its Stack.
+
 #### Stages
 
 A "stage" in serverless is equivalent to what we typically refer to as an
