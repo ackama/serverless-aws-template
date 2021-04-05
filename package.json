@@ -41,7 +41,7 @@
     "jest": "^26.6.3",
     "prettier": "^2.2.1",
     "prettier-config-ackama": "^0.1.2",
-    "serverless": "^2.23.0",
+    "serverless": "^2.33.1",
     "serverless-plugin-scripts": "^1.0.2",
     "ts-jest": "^26.4.4",
     "ts-node": "^9.1.1",
