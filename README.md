@@ -120,11 +120,13 @@ provider property. For example:
 
 ```yaml
 provider:
-  iamRoleStatements:
-    - Effect: 'Allow'
-      Action:
-        - 'organizations:DescribeAccount'
-      Resource: '*'
+  iam:
+    role:
+      statements:
+        - Effect: 'Allow'
+          Action:
+            - 'organizations:DescribeAccount'
+          Resource: '*'
 ```
 
 You can also create custom IAM roles for each function, detailed
