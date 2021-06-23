@@ -19,7 +19,8 @@
   },
   "prettier": "prettier-config-ackama",
   "dependencies": {
-    "@slack/webhook": "^6.0.0"
+    "@slack/webhook": "^6.0.0",
+    "source-map-support": "^0.5.19"
   },
   "devDependencies": {
     "@jest/types": "^26.6.2",
