@@ -22,7 +22,7 @@ export class Notifier {
     return true;
   }
 
-  public async sendError(error: Error, channel: string): Promise<boolean> {
+  public async sendError(error: Error, channel?: string): Promise<boolean> {
     const message = error.stack ?? error.message;
 
     return this.send({

@@ -97,4 +97,3 @@ jobs:
         run: npm run deploy:staging
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.STAGING_SLACK_WEBHOOK_URL }}
-          SLACK_CHANNEL: ${{ secrets.STAGING_SLACK_CHANNEL }}

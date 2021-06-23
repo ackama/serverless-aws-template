@@ -1,19 +1,8 @@
 import { SNSHandler, SNSMessage } from 'aws-lambda';
 import { Notifier } from '../utils';
 
-declare global {
-  namespace NodeJS {
-    interface ProcessEnv {
-      SLACK_CHANNEL: string;
-    }
-  }
-}
-
 const handleSns = async (sns: SNSMessage, notifier: Notifier) => {
-  await notifier.send({
-    channel: process.env.SLACK_CHANNEL,
-    text: buildNotificationMessage(sns)
-  });
+  await notifier.send({ text: buildNotificationMessage(sns) });
 };
 
 const buildNotificationMessage = (sns: SNSMessage): string =>
@@ -39,6 +28,6 @@ export const handler: SNSHandler = async event => {
   } catch (err: unknown) {
     console.error(err);
 
-    await notifier.sendError(err as Error, process.env.SLACK_CHANNEL);
+    await notifier.sendError(err as Error);
   }
 };

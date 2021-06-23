@@ -1,14 +1,6 @@
 import { APIGatewayProxyHandler, APIGatewayProxyResult } from 'aws-lambda';
 import { Notifier } from '../utils';
 
-declare global {
-  namespace NodeJS {
-    interface ProcessEnv {
-      SLACK_CHANNEL: string;
-    }
-  }
-}
-
 interface PostBody {
   message: string;
 }
@@ -39,16 +31,13 @@ export const handler: APIGatewayProxyHandler = async event => {
       return message;
     }
 
-    await notifier.send({
-      channel: process.env.SLACK_CHANNEL,
-      text: message
-    });
+    await notifier.send({ text: message });
 
     return { statusCode: 200, body: 'message sent' };
   } catch (err: unknown) {
     console.error(err);
 
-    await notifier.sendError(err as Error, process.env.SLACK_CHANNEL);
+    await notifier.sendError(err as Error);
 
     return { statusCode: 500, body: 'oh noes!' };
   }

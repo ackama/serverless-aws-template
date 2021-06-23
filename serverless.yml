@@ -37,7 +37,6 @@ provider:
   environment:
     NODE_OPTIONS: '-r source-map-support/register'
     SLACK_WEBHOOK_URL: ${env:SLACK_WEBHOOK_URL}
-    SLACK_CHANNEL: ${env:SLACK_CHANNEL}
 
 custom:
   resources:
