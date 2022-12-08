@@ -1,10 +1,9 @@
 import { IncomingWebhook } from '@slack/webhook';
-import { mocked } from 'ts-jest/utils';
 import { Notifier } from '../../../src/utils';
 
 jest.mock('@slack/webhook');
 
-const fakeIncomingWebhook = mocked(IncomingWebhook, true);
+const fakeIncomingWebhook = jest.mocked(IncomingWebhook);
 
 describe('Notifier', () => {
   beforeEach(() => {

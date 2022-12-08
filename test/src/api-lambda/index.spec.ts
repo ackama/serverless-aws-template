@@ -1,11 +1,10 @@
 import { APIGatewayProxyEvent, Context } from 'aws-lambda';
-import { mocked } from 'ts-jest/utils';
 import { handler } from '../../../src/api-lambda';
 import { Notifier } from '../../../src/utils';
 
 jest.mock('../../../src/utils/Notifier');
 
-const mockNotifier = mocked(Notifier, true);
+const mockNotifier = jest.mocked(Notifier);
 
 // a fake context to get us through the day
 const fakeContext = {

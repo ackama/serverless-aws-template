@@ -4,14 +4,13 @@ import {
   Context
 } from 'aws-lambda';
 import { CloudWatchLogsLogEvent } from 'aws-lambda/trigger/cloudwatch-logs';
-import { mocked } from 'ts-jest/utils';
 import { gzipSync } from 'zlib';
 import { handler } from '../../../src/cloudwatch-lambda';
 import { Notifier } from '../../../src/utils';
 
 jest.mock('../../../src/utils/Notifier');
 
-const mockNotifier = mocked(Notifier, true);
+const mockNotifier = jest.mocked(Notifier);
 
 // a fake context to get us through the day
 const fakeContext = {
