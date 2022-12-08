@@ -54,7 +54,6 @@ describe('handler', () => {
 
       await handler(event, fakeContext, console.log);
 
-      // eslint-disable-next-line @typescript-eslint/unbound-method
       expect(mockNotifier.prototype.send).toHaveBeenCalledWith({
         text: expect.any(String) as string
       });
@@ -67,7 +66,6 @@ describe('handler', () => {
       await handler(event, fakeContext, console.log);
 
       messages.forEach(message => {
-        // eslint-disable-next-line @typescript-eslint/unbound-method
         expect(mockNotifier.prototype.send).toHaveBeenCalledWith({
           text: expect.stringContaining(message) as string
         });
@@ -81,7 +79,6 @@ describe('handler', () => {
 
       await handler(event, fakeContext, console.log);
 
-      // eslint-disable-next-line @typescript-eslint/unbound-method
       expect(mockNotifier.prototype.send).not.toHaveBeenCalled();
     });
   });
@@ -100,7 +97,6 @@ describe('handler', () => {
 
       await handler(event, fakeContext, console.log);
 
-      // eslint-disable-next-line @typescript-eslint/unbound-method
       expect(mockNotifier.prototype.sendError).toHaveBeenCalledWith(error);
     });
   });
