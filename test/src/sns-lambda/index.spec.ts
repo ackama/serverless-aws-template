@@ -1,11 +1,10 @@
 import { Context, SNSEvent, SNSMessage } from 'aws-lambda';
-import { mocked } from 'ts-jest/utils';
 import { handler } from '../../../src/sns-lambda';
 import { Notifier } from '../../../src/utils';
 
 jest.mock('../../../src/utils/Notifier');
 
-const mockNotifier = mocked(Notifier, true);
+const mockNotifier = jest.mocked(Notifier);
 
 // a fake context to get us through the day
 const fakeContext = {
@@ -54,7 +53,6 @@ describe('handler', () => {
 
       await handler(event, fakeContext, console.log);
 
-      // eslint-disable-next-line @typescript-eslint/unbound-method
       expect(mockNotifier.prototype.send).toHaveBeenCalledWith({
         text: expect.any(String) as string
       });
@@ -67,7 +65,6 @@ describe('handler', () => {
       await handler(event, fakeContext, console.log);
 
       messages.forEach(message => {
-        // eslint-disable-next-line @typescript-eslint/unbound-method
         expect(mockNotifier.prototype.send).toHaveBeenCalledWith({
           text: expect.stringContaining(message) as string
         });
@@ -81,7 +78,6 @@ describe('handler', () => {
 
       await handler(event, fakeContext, console.log);
 
-      // eslint-disable-next-line @typescript-eslint/unbound-method
       expect(mockNotifier.prototype.send).not.toHaveBeenCalled();
     });
   });
@@ -100,7 +96,6 @@ describe('handler', () => {
 
       await handler(event, fakeContext, console.log);
 
-      // eslint-disable-next-line @typescript-eslint/unbound-method
       expect(mockNotifier.prototype.sendError).toHaveBeenCalledWith(error);
     });
   });

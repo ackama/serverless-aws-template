@@ -1,10 +1,9 @@
 import { IncomingWebhook } from '@slack/webhook';
-import { mocked } from 'ts-jest/utils';
 import { Notifier } from '../../../src/utils';
 
 jest.mock('@slack/webhook');
 
-const fakeIncomingWebhook = mocked(IncomingWebhook, true);
+const fakeIncomingWebhook = jest.mocked(IncomingWebhook);
 
 describe('Notifier', () => {
   beforeEach(() => {
@@ -31,7 +30,6 @@ describe('Notifier', () => {
 
       await notifier.send(payload);
 
-      // eslint-disable-next-line @typescript-eslint/unbound-method
       expect(fakeIncomingWebhook.prototype.send).toHaveBeenCalledWith(payload);
     });
 
@@ -64,7 +62,6 @@ describe('Notifier', () => {
 
       await notifier.sendError(new Error('oh noes!'));
 
-      // eslint-disable-next-line @typescript-eslint/unbound-method
       expect(fakeIncomingWebhook.prototype.send).toHaveBeenCalledWith({
         text: expect.stringContaining('oh noes!') as string
       });
@@ -91,7 +88,6 @@ describe('Notifier', () => {
 
         await notifier.sendError(error);
 
-        // eslint-disable-next-line @typescript-eslint/unbound-method
         expect(fakeIncomingWebhook.prototype.send).toHaveBeenCalledWith({
           text: expect.stringContaining(
             "oh noes, we don't have a stack trace!"
@@ -106,7 +102,6 @@ describe('Notifier', () => {
 
         await notifier.sendError(new Error('oh noes!'), '#my-channel');
 
-        // eslint-disable-next-line @typescript-eslint/unbound-method
         expect(fakeIncomingWebhook.prototype.send).toHaveBeenCalledWith(
           expect.objectContaining({
             channel: '#my-channel'

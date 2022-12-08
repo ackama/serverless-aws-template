@@ -4,14 +4,13 @@ import {
   Context
 } from 'aws-lambda';
 import { CloudWatchLogsLogEvent } from 'aws-lambda/trigger/cloudwatch-logs';
-import { mocked } from 'ts-jest/utils';
 import { gzipSync } from 'zlib';
 import { handler } from '../../../src/cloudwatch-lambda';
 import { Notifier } from '../../../src/utils';
 
 jest.mock('../../../src/utils/Notifier');
 
-const mockNotifier = mocked(Notifier, true);
+const mockNotifier = jest.mocked(Notifier);
 
 // a fake context to get us through the day
 const fakeContext = {
@@ -63,7 +62,6 @@ describe('handler', () => {
 
       await handler(event, fakeContext, console.log);
 
-      // eslint-disable-next-line @typescript-eslint/unbound-method
       expect(mockNotifier.prototype.send).toHaveBeenCalledWith({
         text: expect.any(String) as string
       });
@@ -82,7 +80,6 @@ describe('handler', () => {
       await handler(event, fakeContext, console.log);
 
       accounts.forEach(account => {
-        // eslint-disable-next-line @typescript-eslint/unbound-method
         expect(mockNotifier.prototype.send).toHaveBeenCalledWith({
           text: `hello ${account}!`
         });
@@ -98,7 +95,6 @@ describe('handler', () => {
 
       await handler(event, fakeContext, console.log);
 
-      // eslint-disable-next-line @typescript-eslint/unbound-method
       expect(mockNotifier.prototype.send).not.toHaveBeenCalled();
     });
   });
@@ -123,7 +119,6 @@ describe('handler', () => {
 
       await handler(event, fakeContext, console.log);
 
-      // eslint-disable-next-line @typescript-eslint/unbound-method
       expect(mockNotifier.prototype.sendError).toHaveBeenCalledWith(error);
     });
   });
