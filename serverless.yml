@@ -1,8 +1,8 @@
 service: serverless-aws-template
 
 useDotenv: true
-frameworkVersion: '2'
-unresolvedVariablesNotificationMode: error
+frameworkVersion: '3'
+configValidationMode: error
 
 plugins:
   - serverless-plugin-scripts
@@ -14,7 +14,6 @@ provider:
 
   apiGateway:
     shouldStartNameWithService: true
-  lambdaHashingVersion: 20201221
 
   logRetentionInDays: 14
   deploymentBucket:
