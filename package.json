@@ -23,10 +23,11 @@
     "source-map-support": "^0.5.19"
   },
   "devDependencies": {
+    "@tsconfig/node20": "^20.1.4",
     "@types/aws-lambda": "^8.10.109",
     "@types/eslint": "^8.4.10",
     "@types/jest": "^29.2.4",
-    "@types/node": "^16.18.7",
+    "@types/node": "^20.14.2",
     "@typescript-eslint/eslint-plugin": "^7.13.0",
     "@typescript-eslint/parser": "^7.13.0",
     "eslint": "^8.29.0",
