@@ -10,7 +10,7 @@ const buildNotificationMessage = (sns: SNSMessage): string =>
     'You have a new notification:',
     sns.Timestamp,
     '',
-    `*${sns.Subject as string}*`,
+    `*${sns.Subject ?? ''}*`,
     '',
     sns.Message
   ].join('\n');
