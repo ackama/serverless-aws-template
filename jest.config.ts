@@ -1,7 +1,6 @@
-import { Config } from '@jest/types';
-import 'ts-jest';
+import { Config } from 'jest';
 
-const config: Config.InitialOptions = {
+const config: Config = {
   testEnvironment: 'node',
   setupFilesAfterEnv: ['./test/setupExpectEachTestHasAssertions.ts'],
   clearMocks: true,
