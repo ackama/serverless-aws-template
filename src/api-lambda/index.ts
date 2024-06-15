@@ -5,7 +5,7 @@ interface PostBody {
   message: string;
 }
 
-const getMessage = (body: string): string | APIGatewayProxyResult => {
+const getMessage = (body: string): APIGatewayProxyResult | string => {
   try {
     const { message } = JSON.parse(body) as PostBody;
 
